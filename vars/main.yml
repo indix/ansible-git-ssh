@@ -1,0 +1,7 @@
+---
+git_ssh_src_folder: "../../keys"
+git_ssh_dest_folder: "/var/go/.ssh"
+git_ssh_private_key: "id_rsa"
+git_ssh_owner: "go"
+git_ssh_group: "go"
+git_ssh_user_home: "/var/go"

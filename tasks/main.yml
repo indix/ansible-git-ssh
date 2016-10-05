@@ -1,0 +1,42 @@
+---
+- name: Add git_ssh_group
+  sudo: yes
+  group:
+    name: "{{git_ssh_group}}"
+    state: present
+
+- name: Add git_ssh_user
+  sudo: yes
+  user:
+    name: "{{git_ssh_owner}}"
+    group: "{{git_ssh_group}}"
+    home: "{{git_ssh_user_home}}"
+
+- name: create .ssh folder
+  file:
+    path: "{{git_ssh_dest_folder}}"
+    state: directory
+    owner: "{{git_ssh_owner}}"
+    group: "{{git_ssh_group}}"
+
+- name: Find how to create ssh keys for cloning git repos
+  set_fact: 
+    git_ssh_use_content: "{{ not((git_ssh_private_key_content is undefined) or (git_ssh_private_key_content is none) or (git_ssh_private_key_content|trim == '')) }}"
+
+- name: Upload git ssh private key
+  copy:
+    src: "{{git_ssh_src_folder}}/{{git_ssh_private_key}}"
+    dest: "{{git_ssh_dest_folder}}/id_rsa"
+    mode: "0600"
+    owner: "{{git_ssh_owner}}"
+    group: "{{git_ssh_group}}"
+  when: not(git_ssh_use_content)
+
+- name: Upload git ssh private key via plain content
+  copy:
+    content: "{{git_ssh_private_key_content}}"
+    dest: "{{git_ssh_dest_folder}}/id_rsa"
+    mode: "0600"
+    owner: "{{git_ssh_owner}}"
+    group: "{{git_ssh_group}}"
+  when: git_ssh_use_content
