@@ -30,7 +30,7 @@
     mode: "0600"
     owner: "{{git_ssh_owner}}"
     group: "{{git_ssh_group}}"
-  when: not(git_ssh_use_content)
+  when: not {{git_ssh_use_content}}
 
 - name: Upload git ssh private key via plain content
   copy:
